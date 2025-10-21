@@ -1,20 +1,30 @@
 import express from "express";
-import {client} from "@repo/db/client"
+import  client  from "@repo/db/client";
 
 const app = express();
 
-app.use(express.json())
+const prisma = new  client.PrismaClient();
 
-app.get("/",(req,res)=>{
+app.use(express.json());
+
+app.get("/", (req, res) => {
     res.send("hi there");
-})
+});
 
-app.post("/signup",(req,res)=>{
-    const {username,password} = req.body;
+app.post("/signup", async (req, res) => {
+    try {
+        const { username, password } = req.body;
 
-    const data = client.user.create({data:{username,password}});
+        const data = await prisma.user.create({
+            data: { username, password }
+        });
 
-    res.send(data)
-})
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to create user",message: error });
+    }
+});
 
-app.listen(3000);
+app.listen(3002, () => {
+    console.log("Server running on http://localhost:3000");
+});
