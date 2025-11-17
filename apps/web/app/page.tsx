@@ -1,12 +1,8 @@
 import Image, { type ImageProps } from "next/image";
 import { Button } from "@repo/ui/button";
-import styles from "./page.module.css";
-import  client  from "@repo/db/client";
-
-const prisma = new client.PrismaClient();
 
 export default async function Home() {
-  const data = await prisma.user.findFirst();
+  const data = {id:1,username:"karthik"}
   return (
     <div >
       {data?.id}
