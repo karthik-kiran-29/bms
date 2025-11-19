@@ -1,0 +1,20 @@
+name: Vm updation on push
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  uses: ubuntu-latest
+  redeploy_everything:
+    name: yella comment yeyum run pannanum
+
+    steps:
+      - name: SSH into machine
+      - run: |
+          echo ${{ secrets.SSH_PRIVATE_KEY }} &> ~/ssh_key
+          ssh -1 ~/ssh_key root@64.227.147.124
+          cd bms/ && git pull
+          pnpm install
+          pnpm run build
+          pm2 restart all
