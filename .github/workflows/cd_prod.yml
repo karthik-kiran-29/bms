@@ -10,10 +10,15 @@ jobs:
 
     steps:
       - run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" &> ~/ssh_key
-          mkdir -p /home/runner/.ssh
-          ls /home/runner/.ssh
-          touch /home/runner/.ssh/known_hosts
+          # Write SSH key correctly
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
+          
+          # Set correct permissions (must be 600, not 700)
+          chmod 600 ~/ssh_key
+          
+          # Add host to known_hosts
+          mkdir -p ~/.ssh
           ssh-keyscan -H 34.55.186.133 >> ~/.ssh/known_hosts
-          chmod 700 /home/runner/ssh_key
-          ssh -i ~/ssh_key root@34.55.186.133 -t "cd bms/ && git pull origin main && export PATH=/root/.nvm/versions/node/v22.13.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin && npm install -g pnpm && pnpm install && pnpm run build && pm2 restart all"
+          
+          # Connect and run commands
+          ssh -i ~/ssh_key root@34.55.186.133 "cd bms/ && git pull origin main && export PATH=/root/.nvm/versions/node/v22.13.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin && npm install -g pnpm && pnpm install && pnpm run build && pm2 restart all"
