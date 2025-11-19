@@ -11,6 +11,7 @@ jobs:
     steps:
       - run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" &> ~/ssh_key
+          ssh-keyscan -H 34.55.186.133 >> ~/.ssh/known_hosts
           ssh -i ~/ssh_key root@34.55.186.133
           cd bms/ && git pull
           pnpm install
