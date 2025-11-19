@@ -20,5 +20,4 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H 34.55.186.133 >> ~/.ssh/known_hosts
           
-          # Connect and run commands
           ssh -i ~/ssh_key root@34.55.186.133 "cd bms/ && git pull origin main && export PATH=/root/.nvm/versions/node/v22.13.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin && npm install -g pnpm && pnpm install && pnpm run build && pm2 restart all"
